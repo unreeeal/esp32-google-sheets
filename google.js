@@ -26,7 +26,7 @@ function doGet(e) {
         var newRow = 1;
         if (lastRow > 0) {
             var lastVal = sheet.getRange(lastRow, 1).getValue();
-          //if where was no info for (sentEmailIfUnitIsOutForMinutes) checkIfDead() function will append row with 'dead' text
+          //if there was no info for (sentEmailIfUnitIsOutForMinutes) checkIfDead() function will append row with 'dead' text
           // so checking do we need to override it
             if (lastVal == 'dead')
                 newRow = lastRow; //to overwrite "dead" value
@@ -83,7 +83,7 @@ function checkIfDead() {
         return;
     var lastRow = sheet.getLastRow();
     var lastVal = sheet.getRange(lastRow, 1).getValue();
-  //if where was no info for (sentEmailIfUnitIsOutForMinutes) checkIfDead() function will append row with 'dead' text  
+  //if there was no info for (sentEmailIfUnitIsOutForMinutes) checkIfDead() function will append row with 'dead' text  
   // so if the last row contains 'dead' an message have been sent already
     if (lastVal == 'dead')
         return;
