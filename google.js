@@ -1,11 +1,11 @@
 var timeZone = "CST"; //get yours at https://www.timeanddate.com/time/zones/
 var dateTimeFormat = "dd/MM/yyyy HH:mm";
-var sentEmailIfUnitIsOutForMinutes = 15;
 
-var enableSendingEmails = false;
+var enableSendingEmails = true;
 var emailAddress = ""; // comma separate for several emails
 // 'bob@example.com';
 // 'bob@example.com,admin@example.com';
+
 
 
 function doGet(e) {
@@ -71,38 +71,7 @@ function doGet(e) {
     return ContentService.createTextOutput(result);
 }
 
-function checkIfDead() {
-    if (!enableSendingEmails)
-        return;
-    var res = '';
-    var currentDate = new Date(Utilities.formatDate(new Date(), timeZone, dateTimeFormat));
-    var sheet = getSpreadSheet();
 
-    var data = sheet.getDataRange().getValues();
-    if (data.length == 0)
-        return;
-    var lastRow = sheet.getLastRow();
-    var lastVal = sheet.getRange(lastRow, 1).getValue();
-  //if there was no info for (sentEmailIfUnitIsOutForMinutes) checkIfDead() function will append row with 'dead' text  
-  // so if the last row contains 'dead' an message have been sent already
-    if (lastVal == 'dead')
-        return;
-    Logger.log('w');
-    var recordDate = new Date(lastVal);
-    var deltaMills = Math.abs(currentDate - recordDate);
-    var delta = Math.floor(deltaMills / 1000 / 60);
-    Logger.log(delta);
-    if (delta > sentEmailIfUnitIsOutForMinutes) {
-        Logger.log("sending email delta " + delta);
-        res = lastVal;
-      //appending 'dead' value to not check it next time
-        sheet.getRange(lastRow + 1, 1).setValue('dead');
-
-    }
-
-    if (res.length > 0)
-        sendEmail("no data for " + sentEmailIfUnitIsOutForMinutes + "mins", res);
-}
 /**
  * Remove leading and trailing single or double quotes
  */
@@ -122,8 +91,10 @@ function parseQuery(queryString) {
 
 function sendEmail(message) {
 
+   if (!enableSendingEmails)
+        return;
     var subject = 'Something wrong with your esp';
-    MailApp.sendEmail(emailAddress, subject, message);
+   MailApp.sendEmail(emailAddress, subject, message);
 
 }
 
